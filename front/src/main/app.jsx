@@ -6,10 +6,8 @@ import Menu from '../template/menu'
 import Routes from './routes'
 
 export default props => (
-  <div>
+  <div className='container'>
     <Menu />
-    <div className='container'>
-      <Routes />
-    </div>
+    <Routes />
   </div>
 )
