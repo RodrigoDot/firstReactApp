@@ -13,18 +13,40 @@ const URL = 'http://localhost:3003/api/todos'
 export default class Todo extends Component {
   constructor(props) {
     super(props)
-    this.handleAdd = this.handleAdd.bind(this)
-    this.handleChange = this.handleChange.bind(this)
-    this.handleList = this.handleList.bind(this)
-    this.handleDone = this.handleDone.bind(this)
-    this.handleUndone = this.handleUndone.bind(this)
-
-    this.handleList()
 
     this.state = {
       description: '',
       list: []
     }
+
+    // From Form
+    this.handleAdd = this.handleAdd.bind(this)
+    this.handleChange = this.handleChange.bind(this)
+    this.handleSearch = this.handleSearch.bind(this)
+    // From List
+    // this.handleList = this.handleList.bind(this)
+    this.handleDone = this.handleDone.bind(this)
+    this.handleUndone = this.handleUndone.bind(this)
+    this.handleRemove = this.handleRemove.bind(this)
+
+    this.handleList()
+  }
+
+  handleList(description = '') {
+    const search = description ? `&description__regex=/${description}/` : ''
+
+    axios.get(`${URL}?sort=-createdAt${search}`)
+    .then(response => {
+      this.setState({
+        ...this.state,
+        description,
+        list: response.data
+      })
+    })
+  }
+
+  handleSearch() {
+    this.handleList(this.state.description)
   }
 
   handleAdd() {
@@ -38,21 +60,10 @@ export default class Todo extends Component {
     })
   }
 
-  handleList() {
-    axios.get(`${URL}?sort=-createdAt`)
-    .then(response => {
-      this.setState({
-        ...this.state,
-        description: '',
-        list: response.data
-      })
-    })
-  }
-
   handleRemove(task) {
     axios.delete(`${URL}/${task._id}`)
     .then(response => {
-      this.handleList()
+      this.handleList(this.state.description)
     })
   }
 
@@ -69,7 +80,7 @@ export default class Todo extends Component {
       done: true
     })
     .then(response => {
-      this.handleList()
+      this.handleList(this.state.description)
     })
   }
 
@@ -79,7 +90,7 @@ export default class Todo extends Component {
       done: false
     })
     .then(response => {
-      this.handleList()
+      this.handleList(this.state.description)
     })
   }
 
@@ -87,9 +98,11 @@ export default class Todo extends Component {
     return (
       <div>
         <PageHeader name='Tarefas' pageDescription='Cadastro' />
-        <TodoForm handleAdd={ this.handleAdd }
+        <TodoForm description={this.state.description}
+          handleAdd={ this.handleAdd }
           handleChange={ this.handleChange }
-          description={ this.state.description } />
+          handleSearch={ this.handleSearch }
+        />
         <TodoList list={ this.state.list }
           handleRemove={ this.handleRemove }
           handleUndone={ this.handleUndone }
