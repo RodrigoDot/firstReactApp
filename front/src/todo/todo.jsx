@@ -16,7 +16,8 @@ export default class Todo extends Component {
     this.handleAdd = this.handleAdd.bind(this)
     this.handleChange = this.handleChange.bind(this)
     this.handleList = this.handleList.bind(this)
-    this.handleRemove = this.handleRemove.bind(this)
+    this.handleDone = this.handleDone.bind(this)
+    this.handleUndone = this.handleUndone.bind(this)
 
     this.handleList()
 
@@ -33,8 +34,6 @@ export default class Todo extends Component {
       description
     })
     .then(response => {
-      console.log(response.data)
-      console.log(response.status)
       this.handleList()
     })
   }
@@ -47,16 +46,12 @@ export default class Todo extends Component {
         description: '',
         list: response.data
       })
-      console.log(this.state.list)
     })
   }
 
-  handleRemove(id) {
-    console.log(id)
-
-    axios.delete(`${URL}/${id}`)
+  handleRemove(task) {
+    axios.delete(`${URL}/${task._id}`)
     .then(response => {
-      console.log(this.state.list)
       this.handleList()
     })
   }
@@ -68,6 +63,26 @@ export default class Todo extends Component {
     })
   }
 
+  handleDone(task) {
+    axios.put(`${URL}/${task._id}`, {
+      ...task,
+      done: true
+    })
+    .then(response => {
+      this.handleList()
+    })
+  }
+
+  handleUndone(task) {
+    axios.put(`${URL}/${task._id}`, {
+      ...task,
+      done: false
+    })
+    .then(response => {
+      this.handleList()
+    })
+  }
+
   render() {
     return (
       <div>
@@ -76,7 +91,10 @@ export default class Todo extends Component {
           handleChange={ this.handleChange }
           description={ this.state.description } />
         <TodoList list={ this.state.list }
-          handleRemove={ this.handleRemove } />
+          handleRemove={ this.handleRemove }
+          handleUndone={ this.handleUndone }
+          handleDone={ this.handleDone }
+        />
       </div>
     )
   }
