@@ -16,6 +16,7 @@ export default class Todo extends Component {
     this.handleAdd = this.handleAdd.bind(this)
     this.handleChange = this.handleChange.bind(this)
     this.handleList = this.handleList.bind(this)
+    this.handleRemove = this.handleRemove.bind(this)
 
     this.handleList()
 
@@ -31,19 +32,34 @@ export default class Todo extends Component {
     axios.post(URL, {
       description
     })
-    .then(function(response){
-      console.log(response.data); // ex.: { user: 'Your User'}
-      console.log(response.status); // ex.: 200
-    });
+    .then(response => {
+      console.log(response.data)
+      console.log(response.status)
+      this.handleList()
+    })
   }
 
-  // handleList() {
-  //   axios.get(URL)
-  //   .then(function(response){
-  //     console.log(response.data); // ex.: { user: 'Your User'}
-  //     console.log(response.status); // ex.: 200
-  //   });
-  // }
+  handleList() {
+    axios.get(`${URL}?sort=-createdAt`)
+    .then(response => {
+      this.setState({
+        ...this.state,
+        description: '',
+        list: response.data
+      })
+      console.log(this.state.list)
+    })
+  }
+
+  handleRemove(id) {
+    console.log(id)
+
+    axios.delete(`${URL}/${id}`)
+    .then(response => {
+      console.log(this.state.list)
+      this.handleList()
+    })
+  }
 
   handleChange(e) {
     this.setState({
@@ -55,10 +71,12 @@ export default class Todo extends Component {
   render() {
     return (
       <div>
-        <PageHeader name='Tarefas' pageDescription='Cadastro'/>
-        <TodoForm handleAdd={ this.handleAdd } handleChange={ this.handleChange }
+        <PageHeader name='Tarefas' pageDescription='Cadastro' />
+        <TodoForm handleAdd={ this.handleAdd }
+          handleChange={ this.handleChange }
           description={ this.state.description } />
-        <TodoList />
+        <TodoList list={ this.state.list }
+          handleRemove={ this.handleRemove } />
       </div>
     )
   }

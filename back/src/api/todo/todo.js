@@ -13,7 +13,7 @@ const todoScheme = new mongoose.Schema({
   },
   createdAt: {
     type: Date,
-    defautl: Date.now
+    default: Date.now
   }
 })
 
