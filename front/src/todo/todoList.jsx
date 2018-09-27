@@ -9,8 +9,8 @@ export default props => {
     const list = props.list || []
     return list.map(task => (
       <tr key={ task._id }>
-        <td colSpan='9' className={ task.done ? 'markedAsDone' : '' }>{ task.description }</td>
-        <td colSpan='3'>
+        <td className={ task.done ? 'markedAsDone table-body-description' : 'table-body-description' }>{ task.description }</td>
+        <td className='table-body-actions'>
           <If test={!task.done}>
             <IconButton style='success' icon='check'
             onClick={ () => props.handleDone(task) } />
@@ -34,8 +34,8 @@ export default props => {
       <table className='table table-hover'>
         <thead>
           <tr>
-            <th colSpan='9'>Descrição</th>
-            <th colSpan='3'>Ações</th>
+            <th className='table-header-desciption'>Descrição</th>
+            <th className='table-header-actions'>Ações</th>
           </tr>
         </thead>
         <tbody>

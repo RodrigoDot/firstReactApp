@@ -24,10 +24,10 @@ export default class Todo extends Component {
     this.handleChange = this.handleChange.bind(this)
     this.handleSearch = this.handleSearch.bind(this)
     // From List
-    // this.handleList = this.handleList.bind(this)
     this.handleDone = this.handleDone.bind(this)
     this.handleUndone = this.handleUndone.bind(this)
     this.handleRemove = this.handleRemove.bind(this)
+    this.handleClear = this.handleClear.bind(this)
 
     this.handleList()
   }
@@ -36,17 +36,21 @@ export default class Todo extends Component {
     const search = description ? `&description__regex=/${description}/` : ''
 
     axios.get(`${URL}?sort=-createdAt${search}`)
-    .then(response => {
-      this.setState({
-        ...this.state,
-        description,
-        list: response.data
+      .then(response => {
+        this.setState({
+          ...this.state,
+          description,
+          list: response.data
+        })
       })
-    })
   }
 
   handleSearch() {
     this.handleList(this.state.description)
+  }
+
+  handleClear() {
+    this.handleList()
   }
 
   handleAdd() {
@@ -55,16 +59,16 @@ export default class Todo extends Component {
     axios.post(URL, {
       description
     })
-    .then(response => {
-      this.handleList()
-    })
+      .then(response => {
+        this.handleList()
+      })
   }
 
   handleRemove(task) {
     axios.delete(`${URL}/${task._id}`)
-    .then(response => {
-      this.handleList(this.state.description)
-    })
+      .then(response => {
+        this.handleList(this.state.description)
+      })
   }
 
   handleChange(e) {
@@ -79,9 +83,9 @@ export default class Todo extends Component {
       ...task,
       done: true
     })
-    .then(response => {
-      this.handleList(this.state.description)
-    })
+      .then(response => {
+        this.handleList(this.state.description)
+      })
   }
 
   handleUndone(task) {
@@ -89,21 +93,24 @@ export default class Todo extends Component {
       ...task,
       done: false
     })
-    .then(response => {
-      this.handleList(this.state.description)
-    })
+      .then(response => {
+        this.handleList(this.state.description)
+      })
   }
 
   render() {
     return (
       <div>
         <PageHeader name='Tarefas' pageDescription='Cadastro' />
-        <TodoForm description={this.state.description}
+        <TodoForm
+          description={this.state.description}
           handleAdd={ this.handleAdd }
           handleChange={ this.handleChange }
           handleSearch={ this.handleSearch }
+          handleClear={ this.handleClear }
         />
-        <TodoList list={ this.state.list }
+        <TodoList
+          list={ this.state.list }
           handleRemove={ this.handleRemove }
           handleUndone={ this.handleUndone }
           handleDone={ this.handleDone }
