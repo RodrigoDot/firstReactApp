@@ -2,7 +2,7 @@ import React from 'react'
 
 export default props => (
   <div className="col-xs-12 col-sm-12 com-md-12">
-    <p role="separator" class="divider"></p>
+    <p role="separator" className="divider"></p>
     <ul className="list-group">
       <li className="list-group-item">
         <span className="badge">14</span> Cras justo odio
