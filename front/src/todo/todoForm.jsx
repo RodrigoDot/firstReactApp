@@ -9,7 +9,8 @@ export default props => (
         placeholder="Tarefa"></input>
     </Grid>
     <Grid cols='12 3 3'>
-      <IconButton style='primary' icon='plus' />
+      <IconButton style='primary' icon='plus'
+        onClick={props.handleAdd}/>
     </Grid>
   </div>
 )
